@@ -1,0 +1,56 @@
+rules_version = '2';
+
+// Who can read and change sign-in profiles and role invites.
+// Deploy with: firebase deploy --only firestore:rules
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+    function myEmail() {
+      return request.auth.token.email.lower();
+    }
+    function myRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+    function isStaffManager() {
+      return signedIn() && myRole() in ['owner', 'admin'];
+    }
+    function inviteFor(email) {
+      return /databases/$(database)/documents/invites/$(email);
+    }
+
+    // One profile per account: { name, email, role, createdAt }.
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isStaffManager());
+
+      // People create their own profile on first sign-in. They can only take the
+      // candidate role, or the role an owner or HR admin invited them with.
+      allow create: if signedIn()
+        && request.auth.uid == uid
+        && request.resource.data.email == myEmail()
+        && (
+          request.resource.data.role == 'candidate'
+          || (exists(inviteFor(myEmail())) && get(inviteFor(myEmail())).data.role == request.resource.data.role)
+        );
+
+      // Only an HR admin can change someone's role or remove a profile.
+      allow update, delete: if signedIn() && myRole() == 'admin';
+    }
+
+    // Role invites keyed by lowercase email: { role, invitedBy, createdAt }.
+    match /invites/{email} {
+      allow read: if signedIn() && (email == myEmail() || isStaffManager());
+      // Owners can invite interviewers; HR admins can invite any staff role.
+      allow create, update: if isStaffManager()
+        && (request.resource.data.role == 'interviewer' || myRole() == 'admin');
+      allow delete: if signedIn() && myRole() == 'admin';
+    }
+
+    // Everything else is closed until the app's data moves to Firestore.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

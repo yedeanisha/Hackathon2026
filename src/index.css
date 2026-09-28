@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+/*
+  Panelist theme, styled after the TEKsystems Global Services brand palette:
+  Dark Blue #021a32, Medium Blue #0095d3, Orange #f8971d, Teal #007698.
+  The app's components use Tailwind's "indigo" (primary) and "violet" (AI) colour names;
+  they are remapped here so every screen picks up the brand colours in one place.
+*/
+@theme {
+  --font-sans: "Barlow", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+
+  /* Primary: TEKsystems Medium Blue */
+  --color-indigo-50: #e8f6fc;
+  --color-indigo-100: #cdebf7;
+  --color-indigo-200: #9bd6ef;
+  --color-indigo-300: #63bfe5;
+  --color-indigo-400: #2eaadd;
+  --color-indigo-500: #0a9fd8;
+  --color-indigo-600: #0095d3;
+  --color-indigo-700: #0078aa;
+  --color-indigo-800: #006088;
+  --color-indigo-900: #004866;
+  --color-indigo-950: #003047;
+
+  /* AI features: TEKsystems Teal */
+  --color-violet-50: #e7f4f7;
+  --color-violet-100: #cbe7ee;
+  --color-violet-200: #97cfdd;
+  --color-violet-300: #62b6cb;
+  --color-violet-400: #2f9db6;
+  --color-violet-500: #0b86a4;
+  --color-violet-600: #007698;
+  --color-violet-700: #00637f;
+  --color-violet-800: #005066;
+  --color-violet-900: #003d4e;
+  --color-violet-950: #002a36;
+
+  /* Accent: TEKsystems Orange */
+  --color-orange-50: #fef4e8;
+  --color-orange-100: #fde6c8;
+  --color-orange-200: #fbcd91;
+  --color-orange-300: #fab45a;
+  --color-orange-400: #f8a336;
+  --color-orange-500: #f8971d;
+  --color-orange-600: #df7d1c;
+  --color-orange-700: #b86314;
+  --color-orange-800: #8f4c10;
+  --color-orange-900: #66360b;
+
+  /* Dark Blue for the sidebar, sign-in panel and headings */
+  --color-navy-600: #1f4468;
+  --color-navy-700: #143556;
+  --color-navy-800: #0b2743;
+  --color-navy-900: #021a32;
+  --color-navy-950: #01101f;
+
+  /* Squarer, more corporate corners */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.1875rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.375rem;
+  --radius-2xl: 0.5rem;
+}
+
+@layer base {
+  html, body, #root { height: 100%; }
+  body { @apply bg-slate-50 text-slate-900 antialiased; }
+  h1, h2, h3 { @apply text-navy-900; letter-spacing: -0.005em; }
+}
+
+.scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+
+@keyframes fade-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.animate-fade-in { animation: fade-in .25s ease-out; }
+@media (prefers-reduced-motion: reduce) { .animate-fade-in { animation: none; } }

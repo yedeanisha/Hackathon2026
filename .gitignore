@@ -1,0 +1,8 @@
+node_modules
+dist
+preview-build
+.DS_Store
+.env.local
+.env*.local
+.firebase
+service-account*.json

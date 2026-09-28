@@ -1,0 +1,69 @@
+WEBVTT
+
+00000001-0-0
+00:00:03.120 --> 00:00:17.400
+<v Sarah Thomas>Hi Vikram, thanks for joining. I'm Sarah, Engineering Director. Today we'll cover backend design, Spring Boot and how you run services in production. Could you start with a quick introduction?</v>
+
+00000002-1-0
+00:00:18.120 --> 00:00:40.400
+<v Vikram Patel>Sure. I'm a software engineer at FinPay with about six years of experience, mostly Java and Spring Boot. For the last three years I've owned our payment APIs, and I led the migration from a monolith to event-driven microservices using Kafka.</v>
+
+00000003-2-0
+00:00:41.120 --> 00:00:48.400
+<v Sarah Thomas>Great. Walk me through how you'd design an idempotent payment API.</v>
+
+00000004-3-0
+00:00:49.120 --> 00:01:31.400
+<v Vikram Patel>First, the client sends an idempotency key with every request. We store the key with the request hash and the response in a table with a unique constraint. If the same key comes again, we return the stored response instead of charging twice. Then, for the downstream calls, we use the outbox pattern so the database write and the Kafka event stay consistent. The trade-off is extra storage and a cleanup job, but it removes duplicate charges.</v>
+
+00000005-4-0
+00:01:32.120 --> 00:01:38.400
+<v Sarah Thomas>How would you debug a production issue where latency doubled overnight?</v>
+
+00000006-5-0
+00:01:39.120 --> 00:02:22.400
+<v Vikram Patel>I'd start with the dashboards to see whether it's all endpoints or one, then compare deployments and traffic from the day before. Last year we had exactly this: a new query was missing an index, so I added the index, and we also put a cache in front of the account lookup. That cut latency by about forty percent. I also added an alert on p95 latency so we catch it sooner.</v>
+
+00000007-6-0
+00:02:23.120 --> 00:02:29.400
+<v Sarah Thomas>What's your experience with Google Cloud?</v>
+
+00000008-7-0
+00:02:30.120 --> 00:02:57.400
+<v Vikram Patel>Honestly, not much hands-on. We're on AWS, so I've used EKS, RDS and SQS. I understand the equivalents on GCP, like GKE, Cloud SQL and Pub/Sub, but I haven't used them in production yet. I'd pick it up quickly, and I'm happy to do the certification.</v>
+
+00000009-8-0
+00:02:58.120 --> 00:03:05.400
+<v Sarah Thomas>How do you index a table for a query that filters on customer and date range?</v>
+
+0000000a-9-0
+00:03:06.120 --> 00:03:24.400
+<v Vikram Patel>I'm not sure about the exact column order. I think a composite index on customer id and then created date would work, because we filter on customer first and then the range.</v>
+
+0000000b-10-0
+00:03:25.120 --> 00:03:31.400
+<v Sarah Thomas>Tell me about a time you disagreed with your team.</v>
+
+0000000c-11-0
+00:03:32.120 --> 00:04:07.400
+<v Vikram Patel>We disagreed on whether to split the ledger service. I wrote a short design doc with both options, we reviewed it together with the product manager, and we agreed on a phased approach. I learned to bring data rather than opinions, and we still use that doc template in the team.</v>
+
+0000000d-12-0
+00:04:08.120 --> 00:04:14.400
+<v Sarah Thomas>How do you work with junior engineers?</v>
+
+0000000e-13-0
+00:04:15.120 --> 00:04:40.400
+<v Vikram Patel>I mentor two engineers. We pair on code reviews every week and I give them ownership of smaller services so they learn on-call with support. I also ask for feedback on how I explain things.</v>
+
+0000000f-14-0
+00:04:41.120 --> 00:04:45.400
+<v Sarah Thomas>Thanks Vikram. Any questions for me?</v>
+
+00000010-15-0
+00:04:46.120 --> 00:05:00.400
+<v Vikram Patel>Yes, how does the team split on-call, and what does success look like in the first six months?</v>
+
+00000011-16-0
+00:05:01.120 --> 00:05:10.400
+<v Sarah Thomas>Good questions. We rotate weekly, and success would be owning one service end to end. Thanks for your time today.</v>
